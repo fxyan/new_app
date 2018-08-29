@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load staticfiles  %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block title %}
+    博客首页
+{% endblock %}
+
+{% block nav_home_active %}
+    active
+{% endblock %}
+
+{% block content %}
+    <h2 class="title">我的博客请随便看</h2>
+{% endblock %}

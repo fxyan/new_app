@@ -1,0 +1,29 @@
+.body{
+    margin: 0px;
+}
+.blog:not(:last-child){
+    padding-top: 0px;
+    margin-bottom: 2em;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1em;
+}
+.blog h3{
+    margin-top: 0.5em;
+}
+.paginator{
+    text-align: center;
+}
+
+.blog-detail-content{
+    text-indent: 2em;
+}
+.blog-info{
+    margin-bottom: 2px;
+}
+.blog-info li{
+    display: inline-block;
+    margin-right: 2em;
+}
+.blog_types li{
+    padding-bottom: 0.5em;
+}
