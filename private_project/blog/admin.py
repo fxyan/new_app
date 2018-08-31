@@ -9,6 +9,7 @@ class BlogAdmin(admin.ModelAdmin):
         'author',
         'content',
         'blog_type',
+        'get_read_num',
         'create_time',
         'last_update_time',
     ]

@@ -1,6 +1,16 @@
 .title{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    font-size: 250%;
+    text-align: center;
+    margin-top: 3em;
+    margin-bottom: 1em;
+}
+#container{
+    margin: 0 auto;
+    height: 20em;
+    min-width: 20em;
+    max-width: 30em;
+}
+.hot_date{
+    text-align: center;
+    margin-top: 2em;
 }

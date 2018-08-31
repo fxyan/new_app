@@ -1,12 +1,9 @@
 import datetime
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
-from django.shortcuts import redirect
 from django.core.paginator import Paginator
 from .models import Blog, BlogType
-
-# Create your views here.
+from private_project.utils import get_readnum
 
 
 def get_paginator_list(request, blog_list):
@@ -57,10 +54,13 @@ def blog_list(request):
 def blog_detail(request, blog_pk):
     context = {}
     blog = get_object_or_404(Blog, pk=blog_pk)
+    read_key = get_readnum(request, blog)
     context['blog'] = blog
     context['previous_blog'] = Blog.objects.filter(create_time__lt=blog.create_time).first()
     context['next_blog'] = Blog.objects.filter(create_time__gt=blog.create_time).last()
-    return render(request, 'blog_detail.html', context)
+    response = render(request, 'blog_detail.html', context)
+    response.set_cookie(read_key, 'true')
+    return response
 
 
 def blog_with_type(request, blog_type_pk):
@@ -78,6 +78,3 @@ def blog_with_date(request, year, month):
     context['blog_with_date'] = '{}年{}月'.format(year, month)
     return render(request, 'blog_with_date.html', context)
 
-
-def mit():
-    pass
