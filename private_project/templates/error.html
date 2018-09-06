@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load staticfiles  %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block title %}
+    error
+{% endblock %}
+
+{% block nav_home_active %}
+    active
+{% endblock %}
+
+{% block content %}
+<div>
+    <p>
+        {{ message }}
+    </p>
+</div>
+{% endblock %}

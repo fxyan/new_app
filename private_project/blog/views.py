@@ -1,9 +1,13 @@
 import datetime
 from django.db.models import Count
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.core.paginator import Paginator
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
 from .models import Blog, BlogType
+from comment.models import Comment
 from private_project.utils import get_readnum
+from private_project.forms import CommentForm
 
 
 def get_paginator_list(request, blog_list):
@@ -54,7 +58,11 @@ def blog_list(request):
 def blog_detail(request, blog_pk):
     context = {}
     blog = get_object_or_404(Blog, pk=blog_pk)
+    content_type = ContentType.objects.get_for_model(blog)
+    comment_forms = CommentForm
     read_key = get_readnum(request, blog)
+    context['comment_forms'] = comment_forms(initial={'content_type': content_type, 'object_id': blog.pk})
+    context['Comment'] = Comment.objects.filter(content_type=content_type, object_id=blog_pk)
     context['blog'] = blog
     context['previous_blog'] = Blog.objects.filter(create_time__lt=blog.create_time).first()
     context['next_blog'] = Blog.objects.filter(create_time__gt=blog.create_time).last()

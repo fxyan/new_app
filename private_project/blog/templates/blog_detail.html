@@ -31,5 +31,31 @@
                 </ul>
             </div>
         </div>
+        <div>
+            {% if user.is_authenticated %}
+                <div>
+                    <p>
+                        您好: {{ user.username }}
+                        <form action="{% url 'comment' %}" method="POST">
+                            {% csrf_token %}
+                            {{ comment_forms }}
+                            <input type="submit" value="提交">
+                        </form>
+                    </p>
+                </div>
+            {% else %}
+                <p>
+                    您尚未登录无法评论，
+                    <a class="btn btn-primary" href="{% url 'login' %}?form={{ request.get_full_path }}">登录</a>
+                    <span>or</span>
+                    <a class="btn btn-warning" href="{% url 'register' %}?form={{ request.get_full_path }}">注册</a>
+                </p>
+            {% endif %}
+        </div>
+        <div>
+            {% for comment in Comment %}
+                {{ comment.user }}({{ comment.create_time }}):{{ comment.text }}
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

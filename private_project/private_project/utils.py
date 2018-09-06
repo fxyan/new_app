@@ -55,12 +55,11 @@ def get_yesterday_hot_read(content_type):
     return yesterday_hot_read
 
 
-def get_week_hot_read(content_type):
+def get_week_hot_read():
     today = timezone.now().date()
     date = today - datetime.timedelta(days=7)
     week_hot_read = Blog.objects.filter(
         read_num__date__lt=today,
         read_num__date__gte=date
     ).values('id', 'title').annotate(read_num_sum=Sum('read_num')).order_by('-read_num_sum')[:3]
-    print('ssss', week_hot_read)
     return week_hot_read
