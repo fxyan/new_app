@@ -27,3 +27,6 @@
 .blog_types li{
     padding-bottom: 0.5em;
 }
+div.django-ckeditor-widget{
+    width: 100%;
+}

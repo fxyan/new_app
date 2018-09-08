@@ -1,6 +1,10 @@
 from django import forms
 from django.contrib import auth
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import ObjectDoesNotExist
+from ckeditor.widgets import CKEditorWidget
+from comment.models import Comment
 
 
 class LoginForm(forms.Form):
@@ -76,6 +80,29 @@ class CommentForm(forms.Form):
     content_type = forms.CharField(widget=forms.HiddenInput)
     comment = forms.CharField(
         label='评论',
-        max_length=20,
-        widget=forms.Textarea(attrs={'placeholder': '请输入评论'})
+        # 更改小部件使用富文本编辑器
+        widget=CKEditorWidget(config_name='comment_ckeditor'),
+        error_messages={'required': '评论不能为空'}
     )
+
+    # 这里调用的父类的方法将user传了进来方便进行验证super方法还是要再学习学习
+    def __init__(self, *args, **kwargs):
+        if 'user' in kwargs:
+            self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        # 判断用户是否登录
+        if self.user.is_authenticated:
+            self.cleaned_data['user'] = self.user
+        else:
+            raise forms.ValidationError('用户尚未登录')
+        object_id = self.cleaned_data['object_id']
+        content_type = self.cleaned_data['content_type']
+        try:
+            model_class = ContentType.objects.get(model=content_type).model_class()
+            model_obj = model_class.objects.get(pk=object_id)
+            self.cleaned_data['content_type'] = model_obj
+        except ObjectDoesNotExist:
+            raise forms.ValidationError('评论对象不存在')
+        return self.cleaned_data
