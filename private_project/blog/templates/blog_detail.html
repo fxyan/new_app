@@ -8,8 +8,8 @@
 {% block css %}
     <link rel="stylesheet" href="{% static 'blog/blog_list.css' %}">
     {# CKEditor所需要的js文件 #}
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -20,8 +20,9 @@
                 <ul class="blog-info">
                     <li>作者: {{ blog.author }}</li>
                     <li>博客类型:<a href="{% url 'blog_with_type' blog.blog_type.pk %}">{{ blog.blog_type }}</a></li>
-                    <li>更新时间: {{ blog.last_update_time|date:"Y-n-j G:i" }}</li>
+                    <li>更新时间: {{ blog.last_update_time|date:"Y-m-d H:i:s" }}</li>
                     <li>阅读数: {{ blog.get_read_num }}</li>
+                    <li>评论数:({{ comment_count }})</li>
                 </ul>
                 <p class="blog-detail-content">{{ blog.content|safe }}</p>
                 <ul>
@@ -41,6 +42,13 @@
                         {% if user.is_authenticated %}
                             <form  id="comment_form" action="{% url 'comment' %}" method="POST" style="overflow:hidden">
                                 <label>{{ user.username }}, 欢迎评论~</label>
+                                <div id="reply_content_container" style="display: none;">
+                                    <p>
+                                        回复:
+                                        <div id="reply_content"></div>
+                                    </p>
+
+                                </div>
                                 {% csrf_token %}
                                 {% for comment in comment_forms %}
                                     {{ comment }}
@@ -61,12 +69,31 @@
                     <h3 class="comment-area-title">评论列表</h3>
                     <div id="comment_list">
                         {% for comment in Comment %}
-                            <p>{{ comment.user }}({{ comment.create_time }}):{{ comment.text|safe }}</p>
+                            <div id="root_{{ comment.pk }}" class="comment_list">
+                                <span>{{ comment.user }}</span>
+                                <span>({{ comment.create_time|date:"Y-m-d H:i:s" }}):</span>
+                                <div id="comment_{{ comment.pk }}">
+                                    {{ comment.text|safe }}
+                                </div>
+                                <a href="javascript:reply({{ comment.pk }});">回复</a>
+                                {% for reply in comment.root_comment.all %}
+                                    <div class="reply_comment">
+                                        <span>{{ reply.user.username }} 回复:{{ reply.reply.username }}</span>
+                                        <span>{{ reply.create_time }}</span>
+                                        <div id="comment_{{ reply.pk }}">
+                                            {{ reply.text|safe }}
+                                        </div>
+                                        <a href="javascript:reply({{ reply.pk }});">回复</a>
+                                    </div>
+                                {% endfor %}
+                        </div>
+                        {% empty %}
+                            <span id="no_comment">暂无评论</span>
                         {% endfor %}
                     </div>
                 </div>
-                </div>
             </div>
+        </div>
     </div>
 {% endblock %}
 {% block script_extends %}
@@ -91,13 +118,30 @@
                 success: function(data){
                     console.log(data);
                     if(data['status']=="SUCCESS"){
-                        // 插入数据
-                        var comment_html = '<div>' + data['username'] +
-                                           ' (' + data['comment_time'] + ')：' +
-                                           data['text'] + '</div>';
-                        $("#comment_list").prepend(comment_html);
+                        if($('#reply_comment_id').val()=='0'){
+                            console.log(2222);
+                            console.log($('#reply_comment_id').val());
+                            //插入评论
+                            var comment_html = '<div class="comment_list"><span>'+ data['username'] +
+                            '</span><span>('+ data['comment_time'] +'):</span><div id="comment_'+ data['comment_pk'] +
+                            '">'+ data['text'] +'</div><a href="javascript:reply('+ data['comment_pk'] +
+                            ');">回复</a></div>';
+                            $('#comment_list').prepend(comment_html);
+                        }else{
+                            console.log(1111);
+                            console.log($('#reply_comment_id').val());
+                            //插入回复
+                            var reply_html = '<div id="root_'+ data['root_pk'] +'" class="reply_comment"><span>'+ data['reply_user'] +' 回复:'+
+                             data['username'] +'</span><span>'+ data['comment_time'] +
+                             '</span><div id="reply_'+ data['comment_pk'] +'">'+ data['text'] +
+                            '</div><a href="javascript:reply('+ data['comment_pk'] +');">回复</a></div>';
+                            $('#root_' + data['root_pk']).append(reply_html);
+                        }
                         // 清空编辑框的内容
                         CKEDITOR.instances['id_comment'].setData('');
+                        $('#reply_content_container').hide();
+                        $('#reply_content_id').val('0');
+                        $('#no_comment').remove();
                     }else{
                         // 显示错误信息
                         $("#comment_error").text(data['message']);
@@ -109,5 +153,17 @@
             });
             return false;
         });
+
+        function reply(reply_comment_id){
+            $('#reply_comment_id').val(reply_comment_id);
+            var html = $("#comment_" + reply_comment_id).html();
+            $('#reply_content').html(html);
+            $('#reply_content_container').show();
+            // 这里animate是jq的动画管理函数我只用了前两个参数，第一个是一个js对象，第二个参数是动画处理时间
+            // 这里scrollTop 是获取后面元素到顶部的距离然后转移的方法 offset().top就是获取前面id元素距离顶部的距离
+            $('html').animate({scrollTop: $('#comment_form').offset().top - 60}, 0, function(){
+                CKEDITOR.instances['id_comment'].focus();
+            });
+        }
     </script>
 {% endblock %}

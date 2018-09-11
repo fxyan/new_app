@@ -84,6 +84,7 @@ class CommentForm(forms.Form):
         widget=CKEditorWidget(config_name='comment_ckeditor'),
         error_messages={'required': '评论不能为空'}
     )
+    reply_comment_id = forms.IntegerField(widget=forms.HiddenInput(attrs={'id': 'reply_comment_id'}))
 
     # 这里调用的父类的方法将user传了进来方便进行验证super方法还是要再学习学习
     def __init__(self, *args, **kwargs):
@@ -106,3 +107,15 @@ class CommentForm(forms.Form):
         except ObjectDoesNotExist:
             raise forms.ValidationError('评论对象不存在')
         return self.cleaned_data
+
+    def clean_reply_comment_id(self):
+        reply_comment_id = self.cleaned_data['reply_comment_id']
+        if reply_comment_id < 0:
+            raise forms.ValidationError('回复出错')
+        elif reply_comment_id == 0:
+            self.cleaned_data['parent'] = None
+        elif Comment.objects.filter(pk=reply_comment_id).exists():
+            self.cleaned_data['parent'] = Comment.objects.get(pk=reply_comment_id)
+        else:
+            raise forms.ValidationError('回复出错')
+        return self.cleaned_data['parent']
