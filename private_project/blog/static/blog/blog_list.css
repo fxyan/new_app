@@ -38,3 +38,14 @@ div.django-ckeditor-widget{
 .reply_comment{
     margin-left: 2em;
 }
+#reply_content_container{
+    display: block;
+    border: 1px solid #cbc6c6;
+    background-color: #e1dddd;
+    padding: 1em 1em 0.5em;
+    border-bottom: none;
+}
+.reply_hidden{
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 0.5em;
+}

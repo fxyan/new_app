@@ -1,13 +1,8 @@
-import datetime
 from django.db.models import Count
-from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
 from .models import Blog, BlogType
-from comment.models import Comment
 from private_project.utils import get_readnum
-from private_project.forms import CommentForm
 
 
 def get_paginator_list(request, blog_list):
@@ -35,27 +30,22 @@ def get_paginator_list(request, blog_list):
 
     blog_dates = Blog.objects.dates('create_time', 'month', order='DESC')
     blogs_count = {}
+    print('blogtype', BlogType.pk)
     for blog_date in blog_dates:
         blog_count = Blog.objects.filter(
             create_time__year=blog_date.year,
             create_time__month=blog_date.month
         ).count()
         blogs_count[blog_date] = blog_count
-    content_type = ContentType.objects.get_for_model(page_of_blogs[0])
-    comment = Comment.objects.filter(content_type=content_type)
-    print('comment', comment)
-    context['comment'] = comment
     context['pages_num'] = pages_num
     context['page_of_blogs'] = page_of_blogs
     context['blog_dates'] = blogs_count
     context['blog_types'] = BlogType.objects.annotate(blog_count=Count('blog'))
-
     return context
 
 
 def blog_list(request):
     blogs = Blog.objects.all()
-
     context = get_paginator_list(request, blogs)
     return render(request, 'blog_list.html', context)
 
@@ -63,18 +53,7 @@ def blog_list(request):
 def blog_detail(request, blog_pk):
     context = {}
     blog = get_object_or_404(Blog, pk=blog_pk)
-    content_type = ContentType.objects.get_for_model(blog)
-    comment_forms = CommentForm
     read_key = get_readnum(request, blog)
-    comment = Comment.objects.filter(
-        content_type=content_type, object_id=blog_pk, parent=None
-    )
-    comment_count = Comment.objects.filter(content_type=content_type, object_id=blog_pk)
-    context['comment_forms'] = comment_forms(
-        initial={'content_type': content_type, 'object_id': blog.pk, 'reply_comment_id': 0}
-    )
-    context['Comment'] = comment.order_by('-create_time')
-    context['comment_count'] = comment_count.count
     context['blog'] = blog
     context['previous_blog'] = Blog.objects.filter(create_time__lt=blog.create_time).first()
     context['next_blog'] = Blog.objects.filter(create_time__gt=blog.create_time).last()

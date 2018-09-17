@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load staticfiles  %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block title %}
+    登录
+{% endblock %}
+
+{% block nav_home_active %}
+    active
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-4 col-xs-offset-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">登录</div>
+                    <div class="panel-body">
+                        <form action="" method="POST">
+                        {% csrf_token %}
+                        {% for login in login_form %}
+                            <label for="{{ login.id_for_label }}">{{ login.label }}</label>
+                            {{ login }}
+                            <p class="text-danger">{{ login.errors.as_text }}</p>
+                        {% endfor %}
+                        <span class="pull-left text-danger">{{ login_form.non_field_errors }}</span>
+                        <div class="clearfix"></div>
+                        <a href="{% url 'forget_password' %}">忘记密码？</a>
+                        <input type="submit" class="btn btn-primary pull-right" value="登录">
+                        </form>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

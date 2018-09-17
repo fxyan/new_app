@@ -55,43 +55,49 @@
         // 图表初始化函数
         var chart = Highcharts.chart('container', options);
     </script>
-<div class="hot_date">
-    <ul>
-        <h3>今日阅读排行</h3>
-        {% for today_hot in today_hot_read %}
-            <li>
-                <a href="{% url 'blog_detail' today_hot.object_id %}">{{ today_hot.content_object.title }}</a>
-                阅读数: {{ today_hot.read_num }}
-            </li>
-        {% empty %}
-            <li>暂无热门博客</li>
-        {% endfor %}
-    </ul>
-</div>
-<div class="hot_date">
-    <ul>
-        <h3>昨日阅读排行</h3>
-        {% for yesterday_hot in yesterday_hot_read %}
-            <li>
-                <a href="{% url 'blog_detail' yesterday_hot.object_id %}">{{ yesterday_hot.content_object.title }}</a>
-                阅读数: {{ yesterday_hot.read_num }}
-            </li>
-        {% empty %}
-            <li>暂无热门博客</li>
-        {% endfor %}
-    </ul>
-</div>
-<div class="hot_date">
-    <ul>
-        <h3>一周阅读排行</h3>
-        {% for week_hot in week_hot_read %}
-            <li>
-                <a href="{% url 'blog_detail' week_hot.id %}">{{ week_hot.title }}</a>
-                阅读数: {{ week_hot.read_num_sum }}
-            </li>
-        {% empty %}
-            <li>暂无热门博客</li>
-        {% endfor %}
-    </ul>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">今日热门阅读</div>
+                <div class="panel-body">
+                    {% for today_hot in today_hot_read %}
+                        <a href="{% url 'blog_detail' today_hot.object_id %}">{{ today_hot.content_object.title }}</a>
+                        阅读数: {{ today_hot.read_num }}
+                    {% empty %}
+                        暂无热门博客
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">昨日热门阅读</div>
+                <div class="panel-body">
+                    {% for yesterday_hot in yesterday_hot_read %}
+                    <p><a href="{% url 'blog_detail' yesterday_hot.object_id %}">{{ yesterday_hot.content_object.title }}</a>
+                        阅读数: {{ yesterday_hot.read_num }}</p>
+                    {% empty %}
+                        暂无热门博客
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">一周热门阅读</div>
+                <div class="panel-body">
+                    {% for week_hot in week_hot_read %}
+                        <p>
+                            <a href="{% url 'blog_detail' week_hot.id %}">{{ week_hot.title }}</a>
+                            阅读数: {{ week_hot.read_num_sum }}
+                        </p>
+                    {% empty %}
+                        <p>暂无热门博客</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

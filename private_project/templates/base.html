@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <title>{% block title %}{% endblock %}</title>
     {% block css %}{% endblock %}
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
@@ -15,6 +14,7 @@
     <script type="text/javascript" src="{% static 'jquery-1.12.4.min.js' %}"></script>
     <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
     <script type="text/javascript"  src="{% static 'Bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 <body>
 
@@ -33,10 +33,26 @@
             <ul class="nav navbar-nav">
                 <li class="{% block nav_home_active %}{% endblock %}"><a href="{% url 'home' %}">首页</a></li>
                 <li class="{% block nav_blog_list_active %}{% endblock %}"><a href="{% url 'blog_list' %}">博客列表</a></li>
-                <li><a href="http://localhost:2000/admin/">后台</a></li>
-                <li><a href="{% url 'login' %}">登录</a></li>
-                <li><a href="{% url 'register' %}">注册</a></li>
                 <li><a></a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if not user.is_authenticated %}
+                    <li><a href="{% url 'login' %}">登录</a></li>
+                    <li><a href="{% url 'register' %}">注册</a></li>
+                {% else %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.username }} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'user_info' %}">个人信息</a></li>
+                            <li><a href="{% url 'change_password' %}">修改密码</a></li>
+                            {% if user.is_superuser %}
+                                <li><a href="{% url 'admin:index' %}">后台</a></li>
+                            {% endif %}
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{% url 'logout' %}">退出登录</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>

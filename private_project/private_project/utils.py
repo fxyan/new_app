@@ -40,7 +40,7 @@ def get_today_hot_read(content_type):
     today_hot_read = ReadNumDetail.objects.filter(
         content_type=content_type,
         date=today
-    ).order_by('-read_num')[:3]
+    ).order_by('-read_num')[:7]
     return today_hot_read
 
 
@@ -50,7 +50,7 @@ def get_yesterday_hot_read(content_type):
     yesterday_hot_read = ReadNumDetail.objects.filter(
         content_type=content_type,
         date=date
-    ).order_by('-read_num')[:3]
+    ).order_by('-read_num')[:7]
     print('yesterday', yesterday_hot_read)
     return yesterday_hot_read
 
@@ -61,5 +61,5 @@ def get_week_hot_read():
     week_hot_read = Blog.objects.filter(
         read_num__date__lt=today,
         read_num__date__gte=date
-    ).values('id', 'title').annotate(read_num_sum=Sum('read_num')).order_by('-read_num_sum')[:3]
+    ).values('id', 'title').annotate(read_num_sum=Sum('read_num')).order_by('-read_num_sum')[:7]
     return week_hot_read

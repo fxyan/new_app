@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load staticfiles  %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block title %}
+    用户信息
+{% endblock %}
+
+{% block nav_home_active %}
+    active
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            {% if user.is_authenticated %}
+                <h2>{{ user.username }}</h2>
+                {% if user.email %}
+                    <p>邮箱: {{ user.email }}</p>
+                {% else %}
+                    <p>邮箱: <a href="{% url 'change_email' %}?form={{ request.get_full_path }}">绑定邮箱</a></p>
+                {% endif %}
+                <p><a href="{% url 'change_password' %}?form={{ request.get_full_path }}">修改密码</a></p>
+                <p>上次登陆时间: {{ user.last_login|date:"Y-m-d H:i:s" }}</p>
+            {% else %}
+                <span>未登录，跳转回首页。。。。</span>
+                <script type="text/javascript">
+                    window.location.href = "/";
+                </script>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
