@@ -51,7 +51,6 @@ def get_yesterday_hot_read(content_type):
         content_type=content_type,
         date=date
     ).order_by('-read_num')[:7]
-    print('yesterday', yesterday_hot_read)
     return yesterday_hot_read
 
 

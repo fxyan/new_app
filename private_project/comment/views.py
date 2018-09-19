@@ -13,7 +13,6 @@ def comment(request):
         comment.text = comment_form.cleaned_data['comment']
         comment.content_object = comment_form.cleaned_data['content_type']
         parent = comment_form.cleaned_data['reply_comment_id']
-        print(parent)
         if parent is not None:
             comment.root = parent.root if parent.root is not None else parent
             comment.parent = parent
@@ -32,7 +31,6 @@ def comment(request):
         data['comment_pk'] = comment.pk
         data['root_pk'] = comment.root.pk if comment.root is not None else ''
     else:
-        print('value', list(comment_form.errors.values())[0][0])
         data['status'] = 'ERROR'
         data['message'] = list(comment_form.errors.values())[0]
     return JsonResponse(data)

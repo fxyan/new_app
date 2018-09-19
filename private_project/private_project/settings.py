@@ -79,10 +79,23 @@ WSGI_APPLICATION = 'private_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+"""
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'myblog_db',
+        'USER': 'wry',
+        'PASSWORD': 'wry123456',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -155,6 +168,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.qq.com'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = '1350821504@qq.com'
-EMAIL_HOST_PASSWORD = 'xxxxxxx'  # 授权码
+EMAIL_HOST_PASSWORD = 'bxvjcgxticndhbjf'  # 授权码
 EMAIL_SUBJECT_PREFIX = '[Codelink]'
 EMAIL_USE_TLS = True  # 与SMTP服务器进行通信的时候启用TLS连接(安全连接)

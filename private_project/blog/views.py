@@ -30,13 +30,14 @@ def get_paginator_list(request, blog_list):
 
     blog_dates = Blog.objects.dates('create_time', 'month', order='DESC')
     blogs_count = {}
-    print('blogtype', BlogType.pk)
     for blog_date in blog_dates:
         blog_count = Blog.objects.filter(
             create_time__year=blog_date.year,
             create_time__month=blog_date.month
         ).count()
+        print('blog_count', blog_count)
         blogs_count[blog_date] = blog_count
+
     context['pages_num'] = pages_num
     context['page_of_blogs'] = page_of_blogs
     context['blog_dates'] = blogs_count
