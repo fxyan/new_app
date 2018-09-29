@@ -15,77 +15,113 @@
 {% endblock %}
 
 {% block content %}
-    <li class="title">我的博客请随便看</li>
-    <!-- 图表容器 DOM -->
-    <div id="container" style="width: 600px;height:400px;"></div>
-    <!-- 引入 highcharts.js -->
-    <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
-    <script>
-        // 图表配置
-        var options = {
-            chart: {
-                type: 'line'                          //指定图表的类型，默认是折线图（line）
-            },
-            title: {
-                text: null                 // 标题
-            },
-            xAxis: {
-                categories: {{ dates|safe }},   // x 轴分类
-                tickmarkPlacement: 'on',
-            },
-            yAxis: {
-                title: { text: null },                // y 轴标题
-                labels: { enabled: false },
-                gridLineDashStyle: 'Dash',
-            },
-            plotOptions: {
-                line: {
-                    dataLabels: {
-                        enabled: true
-                    }
-                }
-            },
-            series: [{                              // 数据列
-                name: '阅读量',                        // 数据列名
-                data: {{ read_num }}                    // 数据
-            }],
-            legend: { enabled: false },
-            credits: { enabled: false },
-        };
-        // 图表初始化函数
-        var chart = Highcharts.chart('container', options);
-    </script>
+<div class="jumbotron">
+    <div class="container">
+        <div>
+            <h2>Code Link</h2>
+        </div>
+        <div  id="title_home">
+            连接自己的编程空间，记录自己的学习历程。
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col-sm-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">今日热门阅读</div>
+                    <!-- 图表容器 DOM -->
+            <div id="container" style="width: 370px;height:280px;"></div>
+            <!-- 引入 highcharts.js -->
+            <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+            <script>
+                // 图表配置
+                var options = {
+                    chart: {
+                        type: 'line'                          //指定图表的类型，默认是折线图（line）
+                    },
+                    title: {
+                        text: '一周阅读量计数折线图 '                 // 标题
+                    },
+                    xAxis: {
+                        categories: {{ dates|safe }},   // x 轴分类
+                        tickmarkPlacement: 'on',
+                    },
+                    yAxis: {
+                        title: { text: null },                // y 轴标题
+                        labels: { enabled: false },
+                        gridLineDashStyle: 'Dash',
+                    },
+                    plotOptions: {
+                        line: {
+                            dataLabels: {
+                                enabled: true
+                            }
+                        }
+                    },
+                    series: [{                              // 数据列
+                        name: '阅读量',                        // 数据列名
+                        data: {{ read_num }}                    // 数据
+                    }],
+                    legend: { enabled: false },
+                    credits: { enabled: false },
+                };
+                // 图表初始化函数
+                var chart = Highcharts.chart('container', options);
+            </script>
+        </div>
+        <div class="col-sm-7 col-sm-offset-1">
+            <div class="panel panel-warning">
+                <div class="panel-heading"><div class="text-warning">关于这个博客</div></div>
+                <div class="panel-body">
+                    <h4 class="text-info">这个博客的作用</h4>
+                    <p>用来记录我的学习经历，把踩的坑和新的知识记录一下。</p>
+                    <h4 class="text-info">为什么会有这个</h4>
+                    <p>
+                        我一直用自己的word文档来记录我的笔记，后来发现有一个能随时可以在网上看的博客更加方便
+                        ，而且还能与众多朋友交流发现自己的不足之处。
+                    </p>
+                    <h4 class="text-info">关于博客</h4>
+                    <p>发一些在我学习过程中觉得比较重要的总结文章。
+                           (质量就不要期待了_:(´ཀ`」 ∠):_ )
+                    </p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="panel panel-danger">
+                <div class="panel-heading"><div class="text-warning">今日热门阅读</div></div>
                 <div class="panel-body">
                     {% for today_hot in today_hot_read %}
                         <a href="{% url 'blog_detail' today_hot.object_id %}">{{ today_hot.content_object.title }}</a>
                         阅读数: {{ today_hot.read_num }}
                     {% empty %}
-                        暂无热门博客
+                        <p>暂无热门博客</p>
                     {% endfor %}
                 </div>
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">昨日热门阅读</div>
+            <div class="panel panel-danger">
+                <div class="panel-heading"><div class="text-warning">昨日热门阅读</div></div>
                 <div class="panel-body">
                     {% for yesterday_hot in yesterday_hot_read %}
                     <p><a href="{% url 'blog_detail' yesterday_hot.object_id %}">{{ yesterday_hot.content_object.title }}</a>
                         阅读数: {{ yesterday_hot.read_num }}</p>
                     {% empty %}
-                        暂无热门博客
+                        <p>暂无热门博客</p>
                     {% endfor %}
                 </div>
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">一周热门阅读</div>
+            <div class="panel panel-danger">
+                <div class="panel-heading"><div class="text-warning">一周热门阅读</div></div>
                 <div class="panel-body">
                     {% for week_hot in week_hot_read %}
                         <p>

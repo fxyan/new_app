@@ -135,16 +135,14 @@
                     console.log(data);
                     if(data['status']=="SUCCESS"){
                         if($('#reply_comment_id').val()=='0'){
-                            console.log(2222);
                             console.log($('#reply_comment_id').val());
                             //插入评论
-                            var comment_html = '<div class="comment_list"><span>'+ data['username'] +
+                            var comment_html = '<div id="root_'+ data['comment_pk'] +'" class="comment_list"><span>'+ data['username'] +
                             '</span><span>('+ timeFormat(data['comment_time']) +'):</span><div id="comment_'+ data['comment_pk'] +
                             '">'+ data['text'] +'</div><a href="javascript:reply('+ data['comment_pk'] +
                             ');">回复</a></div>';
                             $('#comment_list').prepend(comment_html);
                         }else{
-                            console.log(1111);
                             console.log($('#reply_comment_id').val());
                             //插入回复
                             var reply_html = '<div id="root_'+ data['root_pk'] +'" class="reply_comment"><span>'+ data['reply_user'] +' 回复:'+

@@ -14,3 +14,13 @@
     text-align: center;
     margin-top: 2em;
 }
+.jumbotron{
+    padding-top: 5px !important;
+    padding-bottom: 0px !important;
+    margin-top: -9px;
+}
+#title_home{
+    display: inline-block;
+    font-size: 15px !important;
+    margin-bottom: 9px;
+}

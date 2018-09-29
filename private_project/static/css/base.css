@@ -4,6 +4,10 @@
     list-style-type: none;
 }
 body{
+    background: url(images/background2.jpg);
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    background-position:center;
     margin-top: 60px !important;
 }
 
