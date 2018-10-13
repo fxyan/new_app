@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load staticfiles  %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block title %}
+    error
+{% endblock %}
+
+{% block nav_home_active %}
+    active
+{% endblock %}
+
+{% block content %}
+<div>
+    <p>
+        500<br>
+        服务器报错了呢，我们将会尽快通知管理员修复
+        <a href="{{ redirect_to }}">返回</a>
+    </p>
+</div>
+{% endblock %}

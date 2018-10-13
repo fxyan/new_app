@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block title %}
+    error
+{% endblock %}
+
+{% block nav_home_active %}
+    active
+{% endblock %}
+
+{% block content %}
+<div>
+    <p>
+        404<br>
+        您找的页面已经迷失在知识的海洋中了
+        <a href="{{ redirect_to }}">返回</a>
+    </p>
+</div>
+{% endblock %}
