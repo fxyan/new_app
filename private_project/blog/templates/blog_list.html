@@ -39,7 +39,7 @@
                                     <span>阅读数({{ blog.get_read_num }})</span>
                                     <span>评论数({% get_comment_num blog %})</span>
                                 </p>
-                                <p>内容: {{ blog.content|striptags|truncatechars:10 }}</p>
+                                <p>内容: {{ blog.content|striptags|truncatechars:30|safe }}</p>
 
                             </div>
                         {% empty %}

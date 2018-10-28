@@ -8,6 +8,7 @@ from comment.models import Comment
 
 
 class CommentForm(forms.Form):
+    # 在tags里面进行了修改
     object_id = forms.IntegerField(widget=forms.HiddenInput)
     content_type = forms.CharField(widget=forms.HiddenInput)
     comment = forms.CharField(
@@ -18,7 +19,7 @@ class CommentForm(forms.Form):
     )
     reply_comment_id = forms.IntegerField(widget=forms.HiddenInput(attrs={'id': 'reply_comment_id'}))
 
-    # 这里调用的父类的方法将user传了进来方便进行验证super方法还是要再学习学习
+    # 这里调用的父类的方法将user传了进来方便进行验证
     def __init__(self, *args, **kwargs):
         if 'user' in kwargs:
             self.user = kwargs.pop('user')
@@ -33,6 +34,7 @@ class CommentForm(forms.Form):
         object_id = self.cleaned_data['object_id']
         content_type = self.cleaned_data['content_type']
         try:
+            # 返回类模型
             model_class = ContentType.objects.get(model=content_type).model_class()
             model_obj = model_class.objects.get(pk=object_id)
             self.cleaned_data['content_type'] = model_obj
@@ -40,6 +42,7 @@ class CommentForm(forms.Form):
             raise forms.ValidationError('评论对象不存在')
         return self.cleaned_data
 
+    # 验证回复对象的id 来检测父评论
     def clean_reply_comment_id(self):
         reply_comment_id = self.cleaned_data['reply_comment_id']
         if reply_comment_id < 0:

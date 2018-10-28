@@ -22,8 +22,3 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['create_time']
-"""
-"GET /user/send_verification_code/?email=1350821504%40qq.com&send_for=register_code&_=1537630856601
- HTTP/1.1" 200 21
-
-"""

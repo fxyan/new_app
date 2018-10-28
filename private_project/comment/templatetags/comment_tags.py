@@ -5,7 +5,7 @@ from private_project.forms import CommentForm
 
 register = template.Library()
 
-
+# 标签方便我们
 @register.simple_tag
 def get_comment_num(obj):
     content_type = ContentType.objects.get_for_model(obj)

@@ -6,15 +6,16 @@ from django.utils import timezone
 import datetime
 
 
+# 增加阅读数量 并且返回cookie
 def get_readnum(request, obj):
     ct = ContentType.objects.get_for_model(obj)
     key = '{}_{}_read'.format(ct.model, obj.pk)
-    if not request.COOKIES.get(key):
-        # 每篇文章的阅读数据
+    if request.COOKIES.get(key) is None:
+        # 每篇文章的阅读数据+1
         readnum, create = ReadNum.objects.get_or_create(content_type=ct, object_id=obj.pk)
         readnum.read_num += 1
         readnum.save()
-        # 按照时间的阅读数据
+        # 按照时间的阅读数据+1
         date = timezone.now().date()
         readnum_detail, create = ReadNumDetail.objects.get_or_create(content_type=ct, object_id=obj.pk, date=date)
         readnum_detail.read_num += 1
@@ -60,5 +61,6 @@ def get_week_hot_read():
     week_hot_read = Blog.objects.filter(
         read_num__date__lt=today,
         read_num__date__gte=date
-    ).values('id', 'title').annotate(read_num_sum=Sum('read_num')).order_by('-read_num_sum')[:7]
+        #  这里进行了修改read_num
+    ).values('id', 'title').annotate(read_num_sum=Sum('read_num__read_num')).order_by('-read_num_sum')[:7]
     return week_hot_read

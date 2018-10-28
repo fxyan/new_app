@@ -5,8 +5,10 @@ from private_project.forms import CommentForm
 
 
 def comment(request):
+    # 向表单中传入user值方便进行验证
     comment_form = CommentForm(request.POST, user=request.user)
     data = {}
+    # 保存数据
     if comment_form.is_valid():
         comment = Comment()
         comment.user = comment_form.cleaned_data['user']
@@ -32,5 +34,6 @@ def comment(request):
         data['root_pk'] = comment.root.pk if comment.root is not None else ''
     else:
         data['status'] = 'ERROR'
+        # 错误信息
         data['message'] = list(comment_form.errors.values())[0]
     return JsonResponse(data)
